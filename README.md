@@ -9,6 +9,10 @@ Bài tập giữa kỳ môn SOA — Hệ thống quản lý đồ án tốt nghi
 - `src/dang-ky/` — Module quản lý Đăng ký đề tài (phụ trách: **Nhóm trưởng**)
 - `database.sql` — File SQL tạo database và 3 bảng dùng chung cho cả nhóm
 
+## Lưu ý quan trọng trước khi code
+ 
+Nhớ xem kỹ file slide nội dung yêu cầu của bài (đặc biệt phần "Phần demo") trước khi code. Nếu dùng AI hỗ trợ, hãy đính kèm file slide đó vào cho AI đọc, rồi nói rõ mình đang làm module nào, để AI hiểu đúng ngữ cảnh và làm đúng yêu cầu.
+
 ## Hướng dẫn khi nhận code (clone về máy)
 
 1. **Clone repo về máy:**
