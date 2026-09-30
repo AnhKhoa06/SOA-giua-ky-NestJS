@@ -13,7 +13,7 @@ import { DangKyModule } from './dang-ky/dang-ky.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '123456',
+      password: '240725',
       database: 'quanly_dotot_nghiep',
       autoLoadEntities: true,
       synchronize: false,
