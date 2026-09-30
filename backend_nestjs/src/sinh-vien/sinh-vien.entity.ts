@@ -3,7 +3,7 @@ import { Entity, PrimaryColumn, Column } from 'typeorm';
 @Entity('SinhVien')
 export class SinhVien {
   @PrimaryColumn({ name: 'MaSV' })
-  maSV: string;
+  MaSV: string;
 
   @Column({ name: 'HoTen' })
   hoTen: string;

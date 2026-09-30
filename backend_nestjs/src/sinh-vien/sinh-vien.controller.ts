@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { SinhVienService } from './sinh-vien.service';
-import { SinhVien } from './entities/sinh-vien.entity';
+import { SinhVien } from './sinh-vien.entity';
 
 @Controller('sinh-vien')
 export class SinhVienController {

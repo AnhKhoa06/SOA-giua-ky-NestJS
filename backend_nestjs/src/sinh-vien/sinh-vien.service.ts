@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SinhVien } from './entities/sinh-vien.entity';
+import { SinhVien } from './sinh-vien.entity';
 
 @Injectable()
 export class SinhVienService {
