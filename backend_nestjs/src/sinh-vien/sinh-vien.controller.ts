@@ -8,7 +8,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { SinhVienService } from './sinh-vien.service';
-import { SinhVien } from './sinh-vien.entity';
+import { CreateSinhVienDto } from './dto/create-sinh-vien.dto';
+import { UpdateSinhVienDto } from './dto/update-sinh-vien.dto';
 
 @Controller('sinh-vien')
 export class SinhVienController {
@@ -16,7 +17,7 @@ export class SinhVienController {
 
   // POST /sinh-vien - Thêm mới
   @Post()
-  async create(@Body() data: Partial<SinhVien>) {
+  async create(@Body() data: CreateSinhVienDto) {
     return await this.sinhVienService.create(data);
   }
 
@@ -34,10 +35,7 @@ export class SinhVienController {
 
   // PATCH /sinh-vien/:MaSV - Cập nhật
   @Patch(':MaSV')
-  async update(
-    @Param('MaSV') MaSV: string,
-    @Body() data: Partial<SinhVien>,
-  ) {
+  async update(@Param('MaSV') MaSV: string, @Body() data: UpdateSinhVienDto) {
     return await this.sinhVienService.update(MaSV, data);
   }
 

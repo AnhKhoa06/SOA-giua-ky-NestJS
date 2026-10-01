@@ -6,6 +6,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SinhVien } from './sinh-vien.entity';
+import { CreateSinhVienDto } from './dto/create-sinh-vien.dto';
+import { UpdateSinhVienDto } from './dto/update-sinh-vien.dto';
 
 @Injectable()
 export class SinhVienService {
@@ -15,7 +17,7 @@ export class SinhVienService {
   ) {}
 
   // CREATE - Thêm sinh viên mới
-  async create(data: Partial<SinhVien>): Promise<SinhVien> {
+  async create(data: CreateSinhVienDto): Promise<SinhVien> {
     // Kiểm tra xem MaSV đã tồn tại chưa
     const existingStudent = await this.sinhVienRepository.findOne({
       where: { MaSV: data.MaSV },
@@ -48,7 +50,7 @@ export class SinhVienService {
   }
 
   // UPDATE - Cập nhật thông tin sinh viên
-  async update(MaSV: string, data: Partial<SinhVien>): Promise<SinhVien> {
+  async update(MaSV: string, data: UpdateSinhVienDto): Promise<SinhVien> {
     const sinhVien = await this.findOne(MaSV);
     Object.assign(sinhVien, data);
     return await this.sinhVienRepository.save(sinhVien);
@@ -63,4 +65,3 @@ export class SinhVienService {
     };
   }
 }
-
