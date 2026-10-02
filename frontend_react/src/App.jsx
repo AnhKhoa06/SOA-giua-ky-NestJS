@@ -21,6 +21,7 @@ import SinhVien from "./pages/SinhVien";
 import DeTai from "./pages/DeTai";
 import DangKy from "./pages/DangKy";
 import "./App.css";
+import { ToastProvider } from "./components/Toast";
 
 const MENU = [
   {
@@ -80,115 +81,121 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/sinh-vien" />
-            ) : (
-              <Login onLogin={() => setIsLoggedIn(true)} />
-            )
-          }
-        />
-        <Route
-          path="/*"
-          element={
-            isLoggedIn ? (
-              <div className="layout">
-                <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-                  <button
-                    className="sidebar-toggle"
-                    onClick={() => setCollapsed((c) => !c)}
-                    aria-label={collapsed ? "Mở rộng menu" : "Thu gọn menu"}
-                    title={collapsed ? "Mở rộng (Ctrl+B)" : "Thu gọn (Ctrl+B)"}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              isLoggedIn ? (
+                <Navigate to="/sinh-vien" />
+              ) : (
+                <Login onLogin={() => setIsLoggedIn(true)} />
+              )
+            }
+          />
+          <Route
+            path="/*"
+            element={
+              isLoggedIn ? (
+                <div className="layout">
+                  <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+                    <button
+                      className="sidebar-toggle"
+                      onClick={() => setCollapsed((c) => !c)}
+                      aria-label={collapsed ? "Mở rộng menu" : "Thu gọn menu"}
+                      title={
+                        collapsed ? "Mở rộng (Ctrl+B)" : "Thu gọn (Ctrl+B)"
+                      }
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
 
-                  <div className="sidebar-logo">
-                    <img src={logoImg} alt="Logo Trường Đại học Quy Nhơn" />
-                  </div>
-
-                  <div className="sidebar-profile">
-                    <div className="profile-panel">
-                      <div className="avatar">
-                        <UserRound size={24} />
-                      </div>
-                      <div className="profile-info">
-                        <div className="profile-name">
-                          {user.hoTen || "Sinh viên"}
-                        </div>
-                        <div className="profile-role">
-                          Sinh viên{user.maSV ? ` - ${user.maSV}` : ""}
-                        </div>
-                      </div>
+                    <div className="sidebar-logo">
+                      <img src={logoImg} alt="Logo Trường Đại học Quy Nhơn" />
                     </div>
-                  </div>
 
-                  <div className="sidebar-scroll">
-                    {MENU.map((group) => (
-                      <div className="nav-group" key={group.key}>
-                        <button
-                          className="nav-group-header"
-                          onClick={() => toggleGroup(group.key)}
-                        >
-                          <span className="nav-group-title">{group.title}</span>
-                          <ChevronDown
-                            size={16}
-                            className={openGroups[group.key] ? "" : "rotated"}
-                          />
-                        </button>
-
-                        <div
-                          className={`nav-group-body ${openGroups[group.key] ? "open" : ""}`}
-                        >
-                          <div className="nav-group-inner">
-                            {group.items.map(({ to, label, icon: Icon }) => (
-                              <NavLink
-                                key={to}
-                                to={to}
-                                className="nav-link"
-                                data-tooltip={label}
-                              >
-                                <Icon size={20} />
-                                <span className="nav-text">{label}</span>
-                              </NavLink>
-                            ))}
+                    <div className="sidebar-profile">
+                      <div className="profile-panel">
+                        <div className="avatar">
+                          <UserRound size={24} />
+                        </div>
+                        <div className="profile-info">
+                          <div className="profile-name">
+                            {user.hoTen || "Sinh viên"}
+                          </div>
+                          <div className="profile-role">
+                            Sinh viên{user.maSV ? ` - ${user.maSV}` : ""}
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
 
-                  <div className="sidebar-footer">
-                    <button
-                      className="logout-btn"
-                      onClick={handleLogout}
-                      data-tooltip="Đăng xuất"
-                    >
-                      <LogOut size={20} />
-                      <span className="nav-text">Đăng xuất</span>
-                    </button>
-                  </div>
-                </aside>
-                <main className="content">
-                  <Routes>
-                    <Route path="/sinh-vien" element={<SinhVien />} />
-                    <Route path="/de-tai" element={<DeTai />} />
-                    <Route path="/dang-ky" element={<DangKy />} />
-                    <Route path="/" element={<SinhVien />} />
-                  </Routes>
-                </main>
-              </div>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+                    <div className="sidebar-scroll">
+                      {MENU.map((group) => (
+                        <div className="nav-group" key={group.key}>
+                          <button
+                            className="nav-group-header"
+                            onClick={() => toggleGroup(group.key)}
+                          >
+                            <span className="nav-group-title">
+                              {group.title}
+                            </span>
+                            <ChevronDown
+                              size={16}
+                              className={openGroups[group.key] ? "" : "rotated"}
+                            />
+                          </button>
+
+                          <div
+                            className={`nav-group-body ${openGroups[group.key] ? "open" : ""}`}
+                          >
+                            <div className="nav-group-inner">
+                              {group.items.map(({ to, label, icon: Icon }) => (
+                                <NavLink
+                                  key={to}
+                                  to={to}
+                                  className="nav-link"
+                                  data-tooltip={label}
+                                >
+                                  <Icon size={20} />
+                                  <span className="nav-text">{label}</span>
+                                </NavLink>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="sidebar-footer">
+                      <button
+                        className="logout-btn"
+                        onClick={handleLogout}
+                        data-tooltip="Đăng xuất"
+                      >
+                        <LogOut size={20} />
+                        <span className="nav-text">Đăng xuất</span>
+                      </button>
+                    </div>
+                  </aside>
+                  <main className="content">
+                    <Routes>
+                      <Route path="/sinh-vien" element={<SinhVien />} />
+                      <Route path="/de-tai" element={<DeTai />} />
+                      <Route path="/dang-ky" element={<DangKy />} />
+                      <Route path="/" element={<SinhVien />} />
+                    </Routes>
+                  </main>
+                </div>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 }
 
