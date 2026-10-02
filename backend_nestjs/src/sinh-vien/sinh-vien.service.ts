@@ -59,9 +59,18 @@ export class SinhVienService {
   // DELETE - Xóa sinh viên
   async remove(MaSV: string): Promise<{ message: string }> {
     const sinhVien = await this.findOne(MaSV);
-    await this.sinhVienRepository.remove(sinhVien);
-    return {
-      message: `Đã xóa sinh viên ${MaSV} thành công`,
-    };
+    try {
+      await this.sinhVienRepository.remove(sinhVien);
+    } catch (e: any) {
+      const errno = e?.errno ?? e?.driverError?.errno;
+      const code = e?.code ?? e?.driverError?.code;
+      if (errno === 1451 || code === 'ER_ROW_IS_REFERENCED_2') {
+        throw new ConflictException(
+          'Không thể xóa: sinh viên đã có đăng ký đề tài',
+        );
+      }
+      throw e;
+    }
+    return { message: `Đã xóa sinh viên ${MaSV} thành công` };
   }
 }
