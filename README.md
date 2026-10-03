@@ -2,7 +2,7 @@
 
 ### Bước 1: Đính kèm đủ các file sau cho AI (không bỏ file nào)
 
-- File slide yêu cầu của bài (phần "Phần demo") - (nếu lần trước nếu gửi rồi thì k cần đính kèm nữa)
+- File slide yêu cầu của bài (phần "Phần demo") - (nếu lần trước gửi rồi thì k cần đính kèm nữa)
 - `frontend_react/HUONG_DAN_VIET_TRANG.md`
 - `frontend_react/src/api.js`
 - `frontend_react/src/components/Modal.jsx`
