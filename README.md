@@ -1,16 +1,14 @@
-## Câu lệnh mẫu để dán vào AI
+## Các bước thực hiện và câu lệnh mẫu để dán vào AI
 
 ### Bước 1: Đính kèm đủ các file sau cho AI (không bỏ file nào)
 
-- File slide yêu cầu của bài (phần "Phần demo")
+- File slide yêu cầu của bài (phần "Phần demo") - (nếu lần trước nếu gửi rồi thì k cần đính kèm nữa)
 - `frontend_react/HUONG_DAN_VIET_TRANG.md`
 - `frontend_react/src/api.js`
 - `frontend_react/src/components/Modal.jsx`
 - `frontend_react/src/components/ConfirmDialog.jsx`
 - `frontend_react/src/components/Toast.jsx`
 - `frontend_react/src/App.css`
-
-Nếu AI không cho đính kèm file, dán nội dung từng file vào chat, mỗi file ghi rõ tên ở dòng đầu.
 
 ### Bước 2: Dán câu lệnh của trang mình phụ trách
 
