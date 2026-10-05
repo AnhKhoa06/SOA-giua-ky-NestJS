@@ -14,9 +14,9 @@ export class SinhVien {
   @Column({ name: 'Lop', nullable: true })
   lop: string;
 
-  @Column({ name: 'Password', nullable: true })
+  @Column({ name: 'Password', nullable: true, select: false })
   password: string;
 
-  @Column({ name: 'Token', nullable: true })
+  @Column({ name: 'Token', nullable: true, select: false })
   token: string;
 }

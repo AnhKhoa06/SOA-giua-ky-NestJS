@@ -25,9 +25,15 @@ export class DangKyService {
   ) {}
 
   // Gọi dịch vụ khác qua HTTP/REST
-  private async callService(url: string, notFoundMsg: string): Promise<any> {
+  private async callService(
+    url: string,
+    notFoundMsg: string,
+    auth?: string,
+  ): Promise<any> {
     try {
-      const res = await firstValueFrom(this.http.get(url));
+      const res = await firstValueFrom(
+        this.http.get(url, { headers: auth ? { Authorization: auth } : {} }),
+      );
       return res.data;
     } catch (e: any) {
       if (e?.response?.status === 404) throw new NotFoundException(notFoundMsg);
@@ -35,33 +41,33 @@ export class DangKyService {
     }
   }
 
-  private async checkDeTai(maDeTai: number, ignoreId?: number) {
+  private async checkDeTai(maDeTai: number, auth?: string, ignoreId?: number) {
     const deTai = await this.callService(
       `${DETAI_URL}/${maDeTai}`,
       `Không tìm thấy đề tài ${maDeTai}`,
+      auth,
     );
     const toiDa = deTai.soLuongToiDa ?? deTai.SoLuongToiDa ?? 1;
     const daDangKy = await this.repo.count({
       where: { maDeTai, trangThai: Not('Tu choi') },
     });
-    const tru = ignoreId ? 1 : 0; // khi sửa, không tính chính bản ghi này
+    const tru = ignoreId ? 1 : 0;
     if (daDangKy - tru >= toiDa) {
       throw new ConflictException('Đề tài đã đủ số lượng sinh viên');
     }
   }
 
-  async create(dto: CreateDangKyDto): Promise<DangKy> {
+  async create(dto: CreateDangKyDto, auth?: string): Promise<DangKy> {
     await this.callService(
       `${SINHVIEN_URL}/${dto.maSV}`,
       `Không tìm thấy sinh viên ${dto.maSV}`,
+      auth,
     );
-
     const daCo = await this.repo.findOne({
       where: { maSV: dto.maSV, trangThai: Not('Tu choi') },
     });
     if (daCo) throw new ConflictException('Sinh viên đã đăng ký một đề tài');
-
-    await this.checkDeTai(dto.maDeTai);
+    await this.checkDeTai(dto.maDeTai, auth);
     return await this.repo.save(this.repo.create(dto));
   }
 
@@ -75,10 +81,14 @@ export class DangKyService {
     return dk;
   }
 
-  async update(id: number, dto: UpdateDangKyDto): Promise<DangKy> {
+  async update(
+    id: number,
+    dto: UpdateDangKyDto,
+    auth?: string,
+  ): Promise<DangKy> {
     const dk = await this.findOne(id);
     if (dto.maDeTai && dto.maDeTai !== dk.maDeTai) {
-      await this.checkDeTai(dto.maDeTai, id);
+      await this.checkDeTai(dto.maDeTai, auth, id);
     }
     Object.assign(dk, dto);
     return await this.repo.save(dk);

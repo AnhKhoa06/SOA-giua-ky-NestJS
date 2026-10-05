@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class CreateSinhVienDto {
   @IsString()
@@ -17,7 +23,7 @@ export class CreateSinhVienDto {
   @IsString()
   lop?: string;
 
-  @IsOptional()
   @IsString()
-  password?: string;
+  @MinLength(6)
+  password: string;
 }
