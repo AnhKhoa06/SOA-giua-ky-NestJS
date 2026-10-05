@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, LogIn } from "lucide-react";
+import { login } from "../api";
 import campusImg from "../assets/banner.jpg";
 import logoImg from "../assets/logo.png";
 
 function Login({ onLogin }) {
-  const [maSV, setMaSV] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,25 +17,7 @@ function Login({ onLogin }) {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/sinhvien/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ maSV, password }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Sai mã số sinh viên hoặc mật khẩu");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          maSV,
-          hoTen: data.user?.hoTen || data.hoTen || "Sinh viên",
-        }),
-      );
+      await login(username.trim(), password);
       onLogin();
       navigate("/sinh-vien");
     } catch (err) {
@@ -46,13 +29,11 @@ function Login({ onLogin }) {
 
   return (
     <div className="login-page">
-      {/* Bên trái: ảnh trường */}
       <div
         className="login-hero"
         style={{ backgroundImage: `url(${campusImg})` }}
       />
 
-      {/* Bên phải: form */}
       <div className="login-side">
         <div className="login-brand">
           <img
@@ -66,18 +47,19 @@ function Login({ onLogin }) {
 
         <div className="login-box">
           <h2>ĐĂNG NHẬP</h2>
-          <p className="login-subtitle">Đăng nhập bằng tài khoản sinh viên</p>
+          <p className="login-subtitle">Dành cho cán bộ quản lý của Khoa</p>
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label>Mã số sinh viên</label>
+              <label>Tên đăng nhập</label>
               <div className="input-with-icon">
                 <User size={18} className="input-icon" />
                 <input
                   type="text"
-                  placeholder="Nhập mã số sinh viên"
-                  value={maSV}
-                  onChange={(e) => setMaSV(e.target.value)}
+                  placeholder="Nhập tên đăng nhập"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
                   required
                 />
               </div>
@@ -92,6 +74,7 @@ function Login({ onLogin }) {
                   placeholder="Nhập mật khẩu"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
               </div>

@@ -22,6 +22,7 @@ import DeTai from "./pages/DeTai";
 import DangKy from "./pages/DangKy";
 import "./App.css";
 import { ToastProvider } from "./components/Toast";
+import { auth, logout } from "./api";
 
 const MENU = [
   {
@@ -36,7 +37,8 @@ const MENU = [
 ];
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // Còn refresh token thì coi như đã đăng nhập (api.js tự làm mới access token)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!auth.getRefresh());
 
   const [collapsed, setCollapsed] = useState(
     () => localStorage.getItem("sidebar-collapsed") === "true",
@@ -45,15 +47,16 @@ function App() {
   const [openGroups, setOpenGroups] = useState({ project: true });
   const toggleGroup = (key) => setOpenGroups((g) => ({ ...g, [key]: !g[key] }));
 
-  const user = (() => {
-    try {
-      return JSON.parse(localStorage.getItem("user")) || {};
-    } catch {
-      return {};
-    }
-  })();
+  const user = auth.getUser() || {};
 
-  // Lưu trạng thái để lần sau mở lại vẫn giữ nguyên
+  // api.js phát sự kiện này khi phiên hết hạn hẳn
+  useEffect(() => {
+    const onForceLogout = () => setIsLoggedIn(false);
+    window.addEventListener("auth:logout", onForceLogout);
+    return () => window.removeEventListener("auth:logout", onForceLogout);
+  }, []);
+
+  // Lưu trạng thái sidebar
   useEffect(() => {
     localStorage.setItem("sidebar-collapsed", collapsed);
   }, [collapsed]);
@@ -70,13 +73,8 @@ function App() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) setIsLoggedIn(true);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    await logout();
     setIsLoggedIn(false);
   };
 
@@ -121,11 +119,9 @@ function App() {
                           <UserRound size={24} />
                         </div>
                         <div className="profile-info">
-                          <div className="profile-name">
-                            {user.hoTen || "Sinh viên"}
-                          </div>
+                          <div className="profile-name">Quản trị viên</div>
                           <div className="profile-role">
-                            Sinh viên{user.maSV ? ` - ${user.maSV}` : ""}
+                            {user.username || "admin"}
                           </div>
                         </div>
                       </div>
