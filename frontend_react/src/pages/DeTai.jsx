@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { api } from "../api";
 import { useToast } from "../components/Toast";
 import Modal from "../components/Modal";
@@ -66,17 +67,15 @@ export default function DeTai() {
       toast.error("Tên đề tài là bắt buộc");
       return;
     }
-    if (form.soLuongToiDa < 1) {
-      toast.error("Số lượng tối đa phải lớn hơn hoặc bằng 1");
+    const soLuong = parseInt(form.soLuongToiDa, 10);
+    if (!Number.isInteger(soLuong) || soLuong < 1) {
+      toast.error("Số lượng tối đa phải là số nguyên từ 1 trở lên");
       return;
     }
 
     try {
       setSaving(true);
-      const payload = {
-        ...form,
-        soLuongToiDa: parseInt(form.soLuongToiDa, 10),
-      };
+      const payload = { ...form, soLuongToiDa: soLuong };
 
       if (editingId) {
         await api.put(`/de-tai/${editingId}`, payload);
@@ -112,8 +111,11 @@ export default function DeTai() {
   return (
     <div>
       <div className="page-header">
-        <h2>Quản lý Đề tài</h2>
-        <button onClick={handleOpenAdd}>Thêm</button>
+        <h2>Quản lý đề tài</h2>
+        <button onClick={handleOpenAdd}>
+          <Plus size={18} />
+          Thêm đề tài
+        </button>
       </div>
 
       <div className="card">
@@ -147,12 +149,14 @@ export default function DeTai() {
                         className="btn-edit"
                         onClick={() => handleOpenEdit(item)}
                       >
+                        <Pencil size={16} />
                         Sửa
                       </button>
                       <button
                         className="btn-delete"
                         onClick={() => handleOpenDelete(item)}
                       >
+                        <Trash2 size={16} />
                         Xóa
                       </button>
                     </div>
@@ -184,7 +188,7 @@ export default function DeTai() {
         }
       >
         <div className="form-group">
-          <label>Tên đề tài (*)</label>
+          <label>Tên đề tài *</label>
           <input
             type="text"
             value={form.tenDeTai}
