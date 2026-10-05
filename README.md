@@ -143,13 +143,3 @@ git push
 ```
 
 - Trước khi làm việc luôn `git pull`. Gặp conflict thì dừng lại và hỏi nhóm.
-
-## Phân công
-
-| Thành viên | Phụ trách |
-|---|---|
-| Khương | Backend SinhVien, trang Sinh viên |
-| Khang | Backend DeTai, trang Đề tài |
-| Khoa (nhóm trưởng) | Backend DangKy, Auth/JWT, khung frontend, trang Đăng ký, đăng nhập |
-| Huy | Slide thuyết trình, kịch bản demo |
-| Lịch | Kiểm thử hệ thống, dữ liệu mẫu, bảng test API |
