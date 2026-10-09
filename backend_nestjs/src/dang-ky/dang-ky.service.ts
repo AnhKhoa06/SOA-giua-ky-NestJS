@@ -11,18 +11,28 @@ import { firstValueFrom } from 'rxjs';
 import { DangKy } from './dang-ky.entity';
 import { CreateDangKyDto } from './dto/create-dang-ky.dto';
 import { UpdateDangKyDto } from './dto/update-dang-ky.dto';
-
-const SINHVIEN_URL =
-  process.env.SINHVIEN_URL ?? 'http://localhost:3000/sinh-vien';
-const DETAI_URL = process.env.DETAI_URL ?? 'http://localhost:3000/de-tai';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DangKyService {
+  private readonly sinhVienUrl: string;
+  private readonly deTaiUrl: string;
+
   constructor(
     @InjectRepository(DangKy)
     private readonly repo: Repository<DangKy>,
     private readonly http: HttpService,
-  ) {}
+    config: ConfigService,
+  ) {
+    this.sinhVienUrl = config.get<string>(
+      'SINHVIEN_URL',
+      'http://localhost:3000/sinh-vien',
+    );
+    this.deTaiUrl = config.get<string>(
+      'DETAI_URL',
+      'http://localhost:3000/de-tai',
+    );
+  }
 
   // Gọi dịch vụ khác qua HTTP/REST
   private async callService(
@@ -43,7 +53,7 @@ export class DangKyService {
 
   private async checkDeTai(maDeTai: number, auth?: string, ignoreId?: number) {
     const deTai = await this.callService(
-      `${DETAI_URL}/${maDeTai}`,
+      `${this.deTaiUrl}/${maDeTai}`,
       `Không tìm thấy đề tài ${maDeTai}`,
       auth,
     );
@@ -59,7 +69,7 @@ export class DangKyService {
 
   async create(dto: CreateDangKyDto, auth?: string): Promise<DangKy> {
     await this.callService(
-      `${SINHVIEN_URL}/${dto.maSV}`,
+      `${this.sinhVienUrl}/${dto.maSV}`,
       `Không tìm thấy sinh viên ${dto.maSV}`,
       auth,
     );
